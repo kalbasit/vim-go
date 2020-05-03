@@ -169,10 +169,19 @@ function! s:system(cmd, ...) abort
     endif
   endif
 
+  let l:old_path = $PATH
+
+  let l:go_cmd_path = go#path#GoCmd()
+  if !empty(l:go_cmd_path) && l:go_cmd_path != 'go'
+    let l:go_cmd_bin_path = fnameescape(fnamemodify(l:go_cmd_path, ":p:h"))
+    let l:path = l:go_cmd_bin_path . go#util#PathListSep() . $PATH
+  endif
+
   try
     return call('system', [a:cmd] + a:000)
   finally
     " Restore original values
+    let $PATH = l:old_path
     let &shell = l:shell
     let &shellredir = l:shellredir
     let &shellcmdflag = l:shellcmdflag
