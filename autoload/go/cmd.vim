@@ -35,7 +35,7 @@ function! go#cmd#Build(bang, ...) abort
   " Vim and Neovim async
   if go#util#has_job()
     call s:cmd_job({
-          \ 'cmd': ['go'] + args,
+          \ 'cmd': [go#path#GoCmd()] + args,
           \ 'bang': a:bang,
           \ 'for': 'GoBuild',
           \ 'statustype': 'build'
@@ -51,7 +51,7 @@ function! go#cmd#Build(bang, ...) abort
     call go#statusline#Update(expand('%:p:h'), l:status)
 
     let default_makeprg = &makeprg
-    let &makeprg = "go " . join(go#util#Shelllist(args), ' ')
+    let &makeprg = go#path#GoCmd() . " " . join(go#util#Shelllist(args), ' ')
 
     let l:listtype = go#list#Type("GoBuild")
     " execute make inside the source folder so we can parse the errors
@@ -117,7 +117,7 @@ endfunction
 
 " Run runs the current file (and their dependencies if any) in a new terminal.
 function! go#cmd#RunTerm(bang, mode, files) abort
-  let cmd = ["go", "run"]
+  let cmd = [go#path#GoCmd(), "run"]
   if len(go#config#BuildTags()) > 0
     call extend(cmd, ["-tags", go#config#BuildTags()])
   endif
@@ -154,7 +154,7 @@ function! go#cmd#Run(bang, ...) abort
 
   call go#statusline#Update(expand('%:p:h'), l:status)
 
-  let l:cmd = ['go', 'run']
+  let l:cmd = [go#path#GoCmd(), 'run']
   let l:tags = go#config#BuildTags()
   if len(l:tags) > 0
     let l:cmd = l:cmd + ['-tags', l:tags]
@@ -253,7 +253,7 @@ function! go#cmd#Install(bang, ...) abort
     let goargs = map(copy(a:000), "expand(v:val)")
 
     call s:cmd_job({
-          \ 'cmd': ['go', 'install', '-tags', go#config#BuildTags()] + goargs,
+          \ 'cmd': [go#path#GoCmd(), 'install', '-tags', go#config#BuildTags()] + goargs,
           \ 'bang': a:bang,
           \ 'for': 'GoInstall',
           \ 'statustype': 'install'
@@ -265,7 +265,7 @@ function! go#cmd#Install(bang, ...) abort
 
   " :make expands '%' and '#' wildcards, so they must also be escaped
   let goargs = go#util#Shelljoin(map(copy(a:000), "expand(v:val)"), 1)
-  let &makeprg = "go install " . goargs
+  let &makeprg = go#path#GoCmd() . " install " . goargs
 
   let l:listtype = go#list#Type("GoInstall")
   " execute make inside the source folder so we can parse the errors
@@ -301,10 +301,10 @@ function! go#cmd#Generate(bang, ...) abort
   " :make expands '%' and '#' wildcards, so they must also be escaped
   let goargs = go#util#Shelljoin(map(copy(a:000), "expand(v:val)"), 1)
   if go#util#ShellError() != 0
-    let &makeprg = "go generate " . goargs
+    let &makeprg = go#path#GoCmd() . " generate " . goargs
   else
     let gofiles = go#util#Shelljoin(go#tool#Files(), 1)
-    let &makeprg = "go generate " . goargs . ' ' . gofiles
+    let &makeprg = go#path#GoCmd() . " generate " . goargs . ' ' . gofiles
   endif
 
   let l:status = {

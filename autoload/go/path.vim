@@ -123,6 +123,18 @@ function! go#path#Detect() abort
   return gopath
 endfunction
 
+function! go#path#GoCmd() abort
+  let l:go_cmd_path = go#config#GoCmdPath()
+  if !empty(l:go_cmd_path)
+    return l:go_cmd_path
+  endif
+
+  " TODO: Should this call go#path#CheckBinPath("go") instead?
+  "       Doing so may change behavior of the current version.
+  "       Discuss this in the pull request!
+  return "go"
+endfunction
+
 " BinPath returns the binary path of installed go tools.
 function! go#path#BinPath() abort
   let bin_path = go#config#BinPath()

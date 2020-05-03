@@ -22,10 +22,10 @@ function! s:issuebody() abort
       let out = execute('version')
       let body = extend(body, split(out, "\n")[0:2])
     elseif l =~ '^<!-- go version -->'
-      let [out, err] = go#util#Exec(['go', 'version'])
+      let [out, err] = go#util#Exec([go#path#GoCmd(), 'version'])
       let body = add(body, substitute(l:out, rtrimpat, '', ''))
     elseif l =~ '^<!-- go env -->'
-      let [out, err] = go#util#ExecInDir(['go', 'env'])
+      let [out, err] = go#util#ExecInDir([go#path#GoCmd(), 'env'])
       let body = add(body, substitute(l:out, rtrimpat, '', ''))
     elseif l=~ '^<!-- gopls version -->'
       let [out, err] = go#util#Exec(['gopls', 'version'])

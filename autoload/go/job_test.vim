@@ -23,7 +23,7 @@ func! Test_JobDirWithSpaces()
     " go build discards any results when it compiles multiple packages. So we
     " pass the `errors` package just as a placeholder with the current folder
     " (indicated with '.').
-    let l:cmd = ['go', 'build', '.', 'errors']
+    let l:cmd = [go#path#GoCmd(), 'build', '.', 'errors']
 
     let l:complete = go#promise#New(function('s:complete'), 10000, '')
     call go#job#Spawn(l:cmd, {

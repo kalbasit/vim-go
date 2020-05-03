@@ -36,7 +36,7 @@ function! s:paths() abort
   let dirs = []
 
   if !exists("s:goroot")
-    if executable('go')
+    if executable(go#path#GoCmd())
       let s:goroot = go#util#env("goroot")
       if go#util#ShellError() != 0
         call go#util#EchoError('`go env GOROOT` failed')
@@ -59,13 +59,13 @@ function! s:paths() abort
 endfunction
 
 function! s:module() abort
-  let [l:out, l:err] = go#util#ExecInDir(['go', 'list', '-m', '-f', '{{.Dir}}'])
+  let [l:out, l:err] = go#util#ExecInDir([go#path#GoCmd(), 'list', '-m', '-f', '{{.Dir}}'])
   if l:err != 0
     return {}
   endif
   let l:dir = split(l:out, '\n')[0]
 
-  let [l:out, l:err] = go#util#ExecInDir(['go', 'list', '-m', '-f', '{{.Path}}'])
+  let [l:out, l:err] = go#util#ExecInDir([go#path#GoCmd(), 'list', '-m', '-f', '{{.Path}}'])
   if l:err != 0
     return {}
   endif
@@ -78,7 +78,7 @@ function! s:vendordirs() abort
   let l:vendorsuffix = go#util#PathSep() . 'vendor'
   let l:module = s:module()
   if empty(l:module)
-    let [l:root, l:err] = go#util#ExecInDir(['go', 'list', '-f', '{{.Root}}'])
+    let [l:root, l:err] = go#util#ExecInDir([go#path#GoCmd(), 'list', '-f', '{{.Root}}'])
     if l:err != 0
       return []
     endif
@@ -88,7 +88,7 @@ function! s:vendordirs() abort
 
     let l:root = split(l:root, '\n')[0] . go#util#PathSep() . 'src'
 
-    let [l:dir, l:err] = go#util#ExecInDir(['go', 'list', '-f', '{{.Dir}}'])
+    let [l:dir, l:err] = go#util#ExecInDir([go#path#GoCmd(), 'list', '-f', '{{.Dir}}'])
     if l:err != 0
       return []
     endif
@@ -158,7 +158,7 @@ function! go#package#FromPath(arg) abort
         return -1
       endif
     endif
-    let [l:out, l:err] = go#util#Exec(['go', 'list'])
+    let [l:out, l:err] = go#util#Exec([go#path#GoCmd(), 'list'])
     if l:err != 0
       return -1
     endif
@@ -192,7 +192,7 @@ function! go#package#FromPath(arg) abort
 endfunction
 
 function! go#package#CompleteMembers(package, member) abort
-  let [l:content, l:err] = go#util#Exec(['go', 'doc', a:package])
+  let [l:content, l:err] = go#util#Exec([go#path#GoCmd(), 'doc', a:package])
   if l:err || !len(content)
     return []
   endif

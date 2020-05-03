@@ -209,7 +209,7 @@ endfunction
 function! go#lint#Vet(bang, ...) abort
   call go#cmd#autowrite()
 
-  let l:cmd = ['go', 'vet']
+  let l:cmd = [go#path#GoCmd(), 'vet']
 
   let buildtags = go#config#BuildTags()
   if buildtags isnot ''

@@ -402,6 +402,10 @@ function! go#config#BinPath() abort
   return get(g:, "go_bin_path", "")
 endfunction
 
+function! go#config#GoCmdPath() abort
+  return get(g:, "go_cmd_path", "")
+endfunction
+
 function! go#config#SearchBinPathFirst() abort
   return get(g:, 'go_search_bin_path_first', 1)
 endfunction

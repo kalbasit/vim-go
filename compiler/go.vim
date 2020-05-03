@@ -22,7 +22,7 @@ set cpo-=C
 if filereadable("makefile") || filereadable("Makefile")
   CompilerSet makeprg=make
 else
-  CompilerSet makeprg=go\ build
+  CompilerSet makeprg=go#path#GoCmd()\ build
 endif
 
 " Define the patterns that will be recognized by QuickFix when parsing the

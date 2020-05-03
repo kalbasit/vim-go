@@ -42,7 +42,7 @@ endfunction
 function! go#doc#Open(newmode, mode, ...) abort
   " With argument: run "godoc [arg]".
   if len(a:000)
-    let [l:out, l:err] = go#util#Exec(['go', 'doc'] + a:000)
+    let [l:out, l:err] = go#util#Exec([go#path#GoCmd(), 'doc'] + a:000)
   else " Without argument: use gopls to get documentation
     let [l:out, l:err] = go#lsp#Doc()
   endif

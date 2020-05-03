@@ -131,7 +131,7 @@ function! s:go_packages(dirs, arglead) abort
 endfunction
 
 function! s:interface_list(pkg) abort
-  let [contents, err] = go#util#Exec(['go', 'doc', a:pkg])
+  let [contents, err] = go#util#Exec([go#path#GoCmd(), 'doc', a:pkg])
   if err
     return []
   endif
@@ -153,7 +153,7 @@ function! go#impl#Complete(arglead, cmdline, cursorpos) abort
     return s:uniq(sort(s:go_packages(s:root_dirs(), a:arglead)))
   elseif words[-1] =~# '^\h\w.*\.\%(\h\w*\)\=$'
     " match the following, anything that could indicate an interface candidate
-    " 
+    "
     "  io.
     "  io.Wr
     "  github.com/fatih/color.

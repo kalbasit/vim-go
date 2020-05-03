@@ -51,7 +51,7 @@ function! go#test#Test(bang, compile, ...) abort
       let job_options.statustype = 'compile ' . job_options.statustype
     endif
 
-    call s:test_job(['go'] + args, job_options)
+    call s:test_job([go#path#GoCmd()] + args, job_options)
     return
   endif
 
@@ -66,7 +66,7 @@ function! go#test#Test(bang, compile, ...) abort
   call go#cmd#autowrite()
   redraw
 
-  let l:cmd = ['go'] + l:args
+  let l:cmd = [go#path#GoCmd()] + l:args
 
   let [l:out, l:err] = go#util#ExecInDir(l:cmd)
   " TODO(bc): When the output is JSON, the JSON should be run through a

@@ -76,7 +76,7 @@ function! go#util#env(key) abort
     return s:env_cache[l:key]
   endif
 
-  if executable('go')
+  if executable(go#path#GoCmd())
     let l:var = call('go#util#'.l:key, [])
     if go#util#ShellError() != 0
       call go#util#EchoError(printf("'go env %s' failed", toupper(l:key)))
@@ -93,31 +93,31 @@ endfunction
 " goarch returns 'go env GOARCH'. This is an internal function and shouldn't
 " be used. Instead use 'go#util#env("goarch")'
 function! go#util#goarch() abort
-  return substitute(s:exec(['go', 'env', 'GOARCH'])[0], '\n', '', 'g')
+  return substitute(s:exec([go#path#GoCmd(), 'env', 'GOARCH'])[0], '\n', '', 'g')
 endfunction
 
 " goos returns 'go env GOOS'. This is an internal function and shouldn't
 " be used. Instead use 'go#util#env("goos")'
 function! go#util#goos() abort
-  return substitute(s:exec(['go', 'env', 'GOOS'])[0], '\n', '', 'g')
+  return substitute(s:exec([go#path#GoCmd(), 'env', 'GOOS'])[0], '\n', '', 'g')
 endfunction
 
 " goroot returns 'go env GOROOT'. This is an internal function and shouldn't
 " be used. Instead use 'go#util#env("goroot")'
 function! go#util#goroot() abort
-  return substitute(s:exec(['go', 'env', 'GOROOT'])[0], '\n', '', 'g')
+  return substitute(s:exec([go#path#GoCmd(), 'env', 'GOROOT'])[0], '\n', '', 'g')
 endfunction
 
 " gopath returns 'go env GOPATH'. This is an internal function and shouldn't
 " be used. Instead use 'go#util#env("gopath")'
 function! go#util#gopath() abort
-  return substitute(s:exec(['go', 'env', 'GOPATH'])[0], '\n', '', 'g')
+  return substitute(s:exec([go#path#GoCmd(), 'env', 'GOPATH'])[0], '\n', '', 'g')
 endfunction
 
 " gomod returns 'go env GOMOD'. gomod changes depending on the folder. Don't
 " use go#util#env as it caches the value.
 function! go#util#gomod() abort
-  return substitute(s:exec(['go', 'env', 'GOMOD'])[0], '\n', '', 'g')
+  return substitute(s:exec([go#path#GoCmd(), 'env', 'GOMOD'])[0], '\n', '', 'g')
 endfunction
 
 function! go#util#osarch() abort
@@ -127,7 +127,7 @@ endfunction
 " go#util#ModuleRoot returns the root directory of the module of the current
 " buffer.
 function! go#util#ModuleRoot() abort
-  let [l:out, l:err] = go#util#ExecInDir(['go', 'env', 'GOMOD'])
+  let [l:out, l:err] = go#util#ExecInDir([go#path#GoCmd(), 'env', 'GOMOD'])
   if l:err != 0
     return -1
   endif

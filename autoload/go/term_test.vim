@@ -14,7 +14,7 @@ func! Test_GoTermNewMode()
 
     let expected = expand('%:p')
 
-    let cmd = "go run ".  go#util#Shelljoin(go#tool#Files())
+    let cmd = go#path#GoCmd() . " run ".  go#util#Shelljoin(go#tool#Files())
 
     set nosplitright
     call go#term#new(0, cmd, &errorformat)
@@ -39,7 +39,7 @@ func! Test_GoTermNewMode_SplitRight()
 
     let expected = expand('%:p')
 
-    let cmd = "go run ".  go#util#Shelljoin(go#tool#Files())
+    let cmd = go#path#GoCmd() . " run ".  go#util#Shelljoin(go#tool#Files())
 
     set splitright
     call go#term#new(0, cmd, &errorformat)

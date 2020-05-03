@@ -7,7 +7,7 @@ let s:go_major_version = ""
 function! go#mod#Format() abort
   " go mod only exists in `v1.11`
   if empty(s:go_major_version)
-    let tokens = matchlist(go#util#Exec(['go', 'version']), '\d\+.\(\d\+\)\(\.\d\+\)\? ')
+    let tokens = matchlist(go#util#Exec([go#path#GoCmd(), 'version']), '\d\+.\(\d\+\)\(\.\d\+\)\? ')
     if len(tokens) > 0
       let s:go_major_version = str2nr(tokens[1])
     else
@@ -33,7 +33,7 @@ function! go#mod#Format() abort
   endif
 
   let current_col = col('.')
-  let l:args = ['go', 'mod', 'edit', '--fmt', l:tmpname]
+  let l:args = [go#path#GoCmd(), 'mod', 'edit', '--fmt', l:tmpname]
   let [l:out, l:err] = go#util#Exec(l:args)
   let diff_offset = len(readfile(l:tmpname)) - line('$')
 

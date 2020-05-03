@@ -102,7 +102,7 @@ function! s:GoInstallBinaries(updateBinaries, ...)
     set noshellslash
   endif
 
-  let l:get_base_cmd = ['go', 'get', '-v']
+  let l:get_base_cmd = [go#path#GoCmd(), 'get', '-v']
 
   " Filter packages from arguments (if any).
   let l:packages = {}
@@ -195,7 +195,7 @@ function! s:GoInstallBinaries(updateBinaries, ...)
         endif
 
         " and then build and install it
-        let l:build_cmd = ['go', 'build']
+        let l:build_cmd = [go#path#GoCmd(), 'build']
         if len(l:pkg) > 1 && get(l:pkg[1], l:platform, []) isnot []
           let l:build_cmd += get(l:pkg[1], l:platform, [])
         endif
@@ -235,7 +235,7 @@ endfunction
 " CheckBinaries checks if the necessary binaries to install the Go tool
 " commands are available.
 function! s:CheckBinaries()
-  if !executable('go')
+  if !executable(go#path#GoCmd())
     call go#util#EchoError('go executable not found.')
     return -1
   endif

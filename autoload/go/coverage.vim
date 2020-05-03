@@ -50,7 +50,7 @@ function! go#coverage#Buffer(bang, ...) abort
 
   if go#util#has_job()
     call s:coverage_job({
-          \ 'cmd': ['go', 'test', '-tags', go#config#BuildTags(), '-coverprofile', l:tmpname] + a:000,
+          \ 'cmd': [go#path#GoCmd(), 'test', '-tags', go#config#BuildTags(), '-coverprofile', l:tmpname] + a:000,
           \ 'complete': function('s:coverage_callback', [l:tmpname]),
           \ 'bang': a:bang,
           \ 'for': 'GoTest',
@@ -95,7 +95,7 @@ function! go#coverage#Browser(bang, ...) abort
   let l:tmpname = tempname()
   if go#util#has_job()
     call s:coverage_job({
-          \ 'cmd': ['go', 'test', '-tags', go#config#BuildTags(), '-coverprofile', l:tmpname],
+          \ 'cmd': [go#path#GoCmd(), 'test', '-tags', go#config#BuildTags(), '-coverprofile', l:tmpname],
           \ 'complete': function('s:coverage_browser_callback', [l:tmpname]),
           \ 'bang': a:bang,
           \ 'for': 'GoTest',
@@ -112,7 +112,7 @@ function! go#coverage#Browser(bang, ...) abort
   let id = call('go#test#Test', args)
 
   if go#util#ShellError() == 0
-    call go#util#ExecInDir(['go', 'tool', 'cover', '-html=' . l:tmpname])
+    call go#util#ExecInDir([go#path#GoCmd(), 'tool', 'cover', '-html=' . l:tmpname])
   endif
 
   call delete(l:tmpname)
@@ -284,7 +284,7 @@ endfunction
 
 function! s:coverage_browser_callback(coverfile, job, exit_status, data)
   if a:exit_status == 0
-    call go#util#ExecInDir(['go', 'tool', 'cover', '-html=' . a:coverfile])
+    call go#util#ExecInDir([go#path#GoCmd(), 'tool', 'cover', '-html=' . a:coverfile])
   endif
 
   call delete(a:coverfile)
