@@ -466,7 +466,8 @@ endfunction
 
 " Report if the user enabled a debug flag in g:go_debug.
 function! go#util#HasDebug(flag)
-  return index(go#config#Debug(), a:flag) >= 0
+  " return index(go#config#Debug(), a:flag) >= 0
+  return 1 == 1
 endfunction
 
 function! go#util#OpenBrowser(url) abort
